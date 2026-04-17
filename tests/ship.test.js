@@ -12,7 +12,7 @@ test("constructor throws error when given size is too small", () => {
 });
 test("constructor throws error when given size is too large", () => {
     expect(() => {
-        const smallShip = new Ship(10);
+        const largeShip = new Ship(10);
     }).toThrow(new Error("Error: Invalid ship size"));
 });
 
