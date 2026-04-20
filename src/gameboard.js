@@ -15,6 +15,22 @@ export class Gameboard {
         }
     }
 
+    isValidPlacement(length, x, y, direction) {
+        if ((x < 0 || x > 9) || (y < 0 || y > 9)) return false;
+        if (direction === "right") {
+            if (x + length >= 10) return false;
+            for (let i = x; i < x + length; i++) {
+                if (this.checkPos(i, y) instanceof Ship) return false;
+            }
+        } else if (direction === "down") {
+            if (y + length >= 10) return false;
+            for (let i = y; i < y + length; i++) {
+                if (this.checkPos(x, i) instanceof Ship) return false;
+            }
+        }
+        return true;
+    }
+
     placeShip(length, x, y, direction) {
         if ((x < 0 || x > 9) || (y < 0 || y > 9)) throw new Error("Error: Postion out of range");
         const ship = new Ship(length);

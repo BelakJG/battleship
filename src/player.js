@@ -21,4 +21,27 @@ export class Player {
     displayBoard() {
         this.gameboard.displayBoard(this.type);
     }
+
+    resetBoard() {
+        this.gameboard = new Gameboard();
+    }
+
+    placeRandom() {
+        const shipLengths = [5, 4, 3, 3, 2];
+        const shipDirections = ["right", "down"];
+
+        for (const length of shipLengths) {
+            while (true) {
+                let x = Math.floor(Math.random() * 10);
+                let y = Math.floor(Math.random() * 10);
+                let direction = shipDirections[Math.floor(Math.random() * shipDirections.length)];
+                if (this.gameboard.isValidPlacement(length, x, y, direction)) {
+                    this.gameboard.placeShip(length, x, y, direction);
+                    break;
+                } else {
+                    continue;
+                }
+            }
+        }
+    }
 }
