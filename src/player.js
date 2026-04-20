@@ -17,4 +17,8 @@ export class Player {
     get gameboard() {
         return this.gameboard;
     }
+
+    displayBoard() {
+        this.gameboard.displayBoard(this.type);
+    }
 }

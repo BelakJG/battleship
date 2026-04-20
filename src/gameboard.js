@@ -77,4 +77,41 @@ export class Gameboard {
         }
         return true;
     }
+
+    updateTile(tile, x, y, id) {
+        if (this.checkShots(x, y) == "Missed shot") {
+            tile.classList.add("missed");
+            tile.textContent = "X";
+        } else {
+            if (id == "real" && this.checkPos(x, y) instanceof Ship) {
+                tile.classList.add("ship");
+            }
+            if (this.checkShots(x, y) == "Ship Shot") {
+                tile.classList.add("shot");
+            }
+        }
+    }
+
+    displayBoard(id) {
+        const board = document.querySelector(`#${id}-board`);
+        board.replaceChildren();
+
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                const tile = document.createElement("div");
+                tile.classList.add("tile");
+
+                this.updateTile(tile, j, i, id);
+
+                if (id == "computer" && this.checkShots(j, i) != "Missed shot") {
+                    tile.addEventListener("click", () => {
+                        this.receiveAttack(j, i);
+                        this.updateTile(tile, j, i, id);
+                    }, {once: true});
+                }
+
+                board.appendChild(tile);
+            }
+        }
+    }
 }

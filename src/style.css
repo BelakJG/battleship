@@ -1,5 +1,44 @@
 @import '../node_modules/modern-normalize/modern-normalize.css';
 
 body {
+    height: 100dvh;
     background-color: lightgrey;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#board-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    background-color: blue;
+    padding: 25px;
+    border-radius: 15px;
+}
+
+#real-board, #computer-board {
+    width: 350px;
+    height: 350px;
+    border: 1px solid black;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+}
+
+.tile {
+    outline: 1px solid black;
+    background-color: white;
+    font-size: 25px;
+    display: grid;
+    place-items: center;    
+}
+
+.tile.ship {
+    background-color: grey;
+}
+
+.tile.shot, .tile.ship.shot {
+    background-color: red;
 }
