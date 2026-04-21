@@ -18,6 +18,12 @@ body {
     border-radius: 15px;
 }
 
+#board-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 #real-board, #computer-board {
     width: 350px;
     height: 350px;

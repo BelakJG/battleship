@@ -2,17 +2,19 @@ import { Ship } from "./ship.js";
 export class Gameboard {
     rows = 10;
     cols = 10;
+    id;
     board = [];
     shots = [];
     ships = [];
 
-    constructor() {
+    constructor(id) {
         for (let i = 0; i < this.rows; i++) {
             this.board[i] = new Array(this.cols).fill(0);
         }
         for (let i = 0; i < this.rows; i++) {
             this.shots[i] = new Array(this.cols).fill(0);
         }
+        this.id = id;
     }
 
     isValidPlacement(length, x, y, direction) {
@@ -75,16 +77,18 @@ export class Gameboard {
 
     receiveAttack(x, y) {
         if ((x < 0 || x > 9) || (y < 0 || y > 9)) throw new Error("Error: Postion out of range");
-        if (this.checkShots(x, y) == "Coordinate not shot") {
+        if (this.checkShots(x, y) === "Coordinate not shot") {
             const pos = this.checkPos(x, y);
+            const tileContainer = document.querySelector(`#${this.id}-board`);
+            const tile = tileContainer.querySelector(`#tile-${x}-${y}`);
             if (pos instanceof Ship) {
                 this.shots[x][y] = 1;
-                const tile = document.querySelector(`#tile-${x}-${y}`);
                 pos.addTile(tile);
                 pos.hit();
             } else {
                 this.shots[x][y] = -1;
             }
+            this.updateTile(tile, x, y, this.id);
         } else throw new Error("Error: coordinate already shot");
     }
 
@@ -97,12 +101,12 @@ export class Gameboard {
         return true;
     }
 
-    updateTile(tile, x, y, id) {
+    updateTile(tile, x, y) {
         if (this.checkShots(x, y) == "Missed shot") {
             tile.classList.add("missed");
             tile.textContent = "X";
         } else {
-            if (id == "real" && this.checkPos(x, y) instanceof Ship) {
+            if (this.id == "real" && this.checkPos(x, y) instanceof Ship) {
                 tile.classList.add("ship");
             }
             if (this.checkShots(x, y) == "Ship Shot") {
@@ -111,8 +115,8 @@ export class Gameboard {
         }
     }
 
-    displayBoard(id) {
-        const board = document.querySelector(`#${id}-board`);
+    displayBoard() {
+        const board = document.querySelector(`#${this.id}-board`);
         board.replaceChildren();
 
         for (let i = 0; i < 10; i++) {
@@ -121,14 +125,7 @@ export class Gameboard {
                 tile.classList.add("tile");
                 tile.id = `tile-${j}-${i}`;
 
-                this.updateTile(tile, j, i, id);
-
-                if (id == "computer" && this.checkShots(j, i) != "Missed shot") {
-                    tile.addEventListener("click", () => {
-                        this.receiveAttack(j, i);
-                        this.updateTile(tile, j, i, id);
-                    }, {once: true});
-                }
+                this.updateTile(tile, j, i);
 
                 board.appendChild(tile);
             }

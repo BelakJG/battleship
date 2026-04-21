@@ -7,7 +7,7 @@ export class Player {
         if (!(type == "real" || type == "computer")) throw new Error("Error: Wrong player type given");
 
         this.type = type;
-        this.gameboard = new Gameboard();
+        this.gameboard = new Gameboard(type);
     }
 
     get type() {
@@ -19,11 +19,11 @@ export class Player {
     }
 
     displayBoard() {
-        this.gameboard.displayBoard(this.type);
+        this.gameboard.displayBoard();
     }
 
     resetBoard() {
-        this.gameboard = new Gameboard();
+        this.gameboard = new Gameboard(this.type);
     }
 
     placeRandom() {
@@ -38,8 +38,6 @@ export class Player {
                 if (this.gameboard.isValidPlacement(length, x, y, direction)) {
                     this.gameboard.placeShip(length, x, y, direction);
                     break;
-                } else {
-                    continue;
                 }
             }
         }
