@@ -13,6 +13,10 @@ realPlayer.displayBoard();
 
 const realRandom = document.querySelector("#random-btn");
 realRandom.addEventListener("click", () => {
+    computerPlayer.resetBoard();
+    computerPlayer.placeRandom();
+    computerPlayer.displayBoard();
+
     realPlayer.resetBoard();
     realPlayer.placeRandom();
     realPlayer.displayBoard();

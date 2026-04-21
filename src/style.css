@@ -42,3 +42,7 @@ body {
 .tile.shot, .tile.ship.shot {
     background-color: red;
 }
+
+.tile.ship.shot.sunk, .tile.shot.sunk, .tile.sunk, .sunk {
+    background-color: yellow;
+}

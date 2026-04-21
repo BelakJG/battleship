@@ -33,6 +33,7 @@ export class Gameboard {
 
     placeShip(length, x, y, direction) {
         if ((x < 0 || x > 9) || (y < 0 || y > 9)) throw new Error("Error: Postion out of range");
+        if (!this.isValidPlacement(length, x, y, direction)) throw new Error("Error: Invalid Placement");
         const ship = new Ship(length);
         if (direction === "right") {
             for (let i = x; i < x + length; i++) {
@@ -77,8 +78,10 @@ export class Gameboard {
         if (this.checkShots(x, y) == "Coordinate not shot") {
             const pos = this.checkPos(x, y);
             if (pos instanceof Ship) {
-                pos.hit();
                 this.shots[x][y] = 1;
+                const tile = document.querySelector(`#tile-${x}-${y}`);
+                pos.addTile(tile);
+                pos.hit();
             } else {
                 this.shots[x][y] = -1;
             }
@@ -116,6 +119,7 @@ export class Gameboard {
             for (let j = 0; j < 10; j++) {
                 const tile = document.createElement("div");
                 tile.classList.add("tile");
+                tile.id = `tile-${j}-${i}`;
 
                 this.updateTile(tile, j, i, id);
 
