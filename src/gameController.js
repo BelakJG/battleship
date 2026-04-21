@@ -1,10 +1,13 @@
 import { Player } from "./player.js"
 
 const GameController = (() => {
-    const computerPlayer = new Player("computer");
-    const realPlayer = new Player("real");
+    let computerPlayer;
+    let realPlayer;
 
     let initialize = () => {
+        computerPlayer = new Player("computer");
+        realPlayer = new Player("real");
+
         computerPlayer.placeRandom();
         computerPlayer.displayBoard();
         
@@ -33,7 +36,11 @@ const GameController = (() => {
                 tile.addEventListener("click", () => {
                     computerPlayer.gameboard.receiveAttack(x, y);
                     computerPlayer.gameboard.updateTile(tile, x, y);
-                    computerTurn();
+                    if (computerPlayer.gameboard.allShipsSunk()) {
+                        gameOver("real");
+                    } else {
+                        computerTurn();
+                    }
                 }, {once: true});
             }
         }
@@ -48,7 +55,38 @@ const GameController = (() => {
                 break;
             }
         }
+        if (realPlayer.gameboard.allShipsSunk()) {
+            gameOver("computer");
+        }
     }
+
+    let gameOver = (player) => {
+        const backdrop = document.querySelector("#modal-backdrop");
+        const gameoverScreen = document.querySelector("#game-over");
+        gameoverScreen.replaceChildren();
+
+        backdrop.classList.add("show");
+        gameoverScreen.classList.add("show");
+
+        const screenheader = document.createElement("h1");
+        screenheader.textContent = "Game Over!";
+        gameoverScreen.appendChild(screenheader);
+
+        const winner = document.createElement("p");
+        winner.textContent = `The ${player === "real" ? "Real Player" : "Computer"} Wins!`;
+        gameoverScreen.appendChild(winner);
+
+        const againBtn = document.createElement("button");
+        againBtn.type = "button";
+        againBtn.textContent = "Play Again?"
+        gameoverScreen.appendChild(againBtn);
+
+        againBtn.addEventListener("click", () => {
+            backdrop.classList.remove("show");
+            gameoverScreen.classList.remove("show");
+            initialize();
+        });
+    };
 
     return { initialize };
 })();
