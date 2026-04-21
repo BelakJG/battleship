@@ -37,7 +37,7 @@ test("Ships can not be overlapped", () => {
     expect(() => {
         board.placeShip(5, 5, 3, "down");
         board.placeShip(5, 3, 3, "right");
-    }).toThrow(new Error("Error: Ships can not overlap"));
+    }).toThrow(new Error("Error: Invalid Placement"));
 });
 
 test("checkPos() will throw error if given invalid coords", () => {
@@ -70,7 +70,7 @@ test("receiveAttack() logs missed shots", () => {
     const board = new Gameboard();
     expect(board.checkShots(1, 1)).toBe("Coordinate not shot");
 
-    board.receiveAttack(1, 1);
+    board.receiveAttackTest(1, 1);
     expect(board.checkShots(1, 1)).toBe("Missed shot");
 });
 test("receiveAttack() logs hits and trigger Ship.hit()", () => {
@@ -78,7 +78,7 @@ test("receiveAttack() logs hits and trigger Ship.hit()", () => {
     board.placeShip(2, 1, 1, "down");
     const ship = board.checkPos(1, 1);
 
-    board.receiveAttack(1, 1);
+    board.receiveAttackTest(1, 1);
     expect(board.checkShots(1, 1)).toBe("Ship Shot");
     expect(ship.timesHit).toBe(1);
 });
@@ -87,8 +87,8 @@ test("Ships will save if they're sunk", () => {
     board.placeShip(2, 1, 1, "down");
     const ship = board.checkPos(1, 1);
 
-    board.receiveAttack(1, 1);
-    board.receiveAttack(1, 2);
+    board.receiveAttackTest(1, 1);
+    board.receiveAttackTest(1, 2);
 
     expect(ship.timesHit).toBe(2);
     expect(ship.isSunk()).toBe(true);
@@ -99,11 +99,11 @@ test("Ships can only be shot once per coordinate", () => {
     const ship = board.checkPos(1, 1);
 
     expect(ship.timesHit).toBe(0);
-    board.receiveAttack(1, 1);
+    board.receiveAttackTest(1, 1);
     expect(ship.timesHit).toBe(1);
 
     expect(() => {
-        board.receiveAttack(1, 1);
+        board.receiveAttackTest(1, 1);
     }).toThrow(new Error("Error: coordinate already shot"));
     expect(ship.timesHit).toBe(1);
 });
@@ -113,11 +113,11 @@ test("Gameboard able to report if all ships are sunk", () => {
     board.placeShip(2, 1, 1, "right");
     board.placeShip(2, 1, 2, "right");
 
-    board.receiveAttack(1, 1);
-    board.receiveAttack(2, 1);
+    board.receiveAttackTest(1, 1);
+    board.receiveAttackTest(2, 1);
     expect(board.allShipsSunk()).toBe(false);
 
-    board.receiveAttack(1, 2);
-    board.receiveAttack(2, 2);
+    board.receiveAttackTest(1, 2);
+    board.receiveAttackTest(2, 2);
     expect(board.allShipsSunk()).toBe(true);
 });

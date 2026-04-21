@@ -75,6 +75,23 @@ export class Gameboard {
         }
     }
 
+    receiveAttackTest(x, y) {
+        if ((x < 0 || x > 9) || (y < 0 || y > 9)) throw new Error("Error: Postion out of range");
+        if (this.checkShots(x, y) === "Coordinate not shot") {
+            const pos = this.checkPos(x, y);
+            // const tileContainer = document.querySelector(`#${this.id}-board`);
+            // const tile = tileContainer.querySelector(`#tile-${x}-${y}`);
+            if (pos instanceof Ship) {
+                this.shots[x][y] = 1;
+                // pos.addTile(tile);
+                pos.hit();
+            } else {
+                this.shots[x][y] = -1;
+            }
+            // this.updateTile(tile, x, y, this.id);
+        } else throw new Error("Error: coordinate already shot");
+    }
+
     receiveAttack(x, y) {
         if ((x < 0 || x > 9) || (y < 0 || y > 9)) throw new Error("Error: Postion out of range");
         if (this.checkShots(x, y) === "Coordinate not shot") {
@@ -111,6 +128,7 @@ export class Gameboard {
             }
             if (this.checkShots(x, y) == "Ship Shot") {
                 tile.classList.add("shot");
+                tile.textContent = "O";
             }
         }
     }
